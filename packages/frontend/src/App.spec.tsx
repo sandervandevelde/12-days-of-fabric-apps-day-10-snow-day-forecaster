@@ -1,4 +1,4 @@
-import { act, fireEvent, render, screen, within } from '@testing-library/react';
+import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import App from './App';
 import { shiftDate, type Forecast, type Place } from './weather';
@@ -25,6 +25,7 @@ beforeEach(() => {
 });
 afterEach(() => {
   vi.useRealTimers();
+  vi.restoreAllMocks();
   vi.unstubAllGlobals();
 });
 
@@ -76,18 +77,39 @@ describe('Snowpost', () => {
     expect(forecast).toHaveBeenCalledTimes(3);
   });
 
-  it('ploughs before switching off snow and can resume snowfall', async () => {
+  it('builds separate drifts across the page and removes them after the plough sweep', async () => {
+    let scroll = 0;
+    vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function (this: HTMLElement) {
+      if (this.matches('.brand-mark')) return new DOMRect(30, 25 - scroll, 44, 44);
+      if (this.matches('.globe-panel')) return new DOMRect(520, 200 - scroll, 450, 320);
+      if (this.matches('.day-cell:first-of-type')) return new DOMRect(60, 780 - scroll, 120, 108);
+      if (this.matches('.winter-footer')) return new DOMRect(60, 980 - scroll, 900, 45);
+      return new DOMRect();
+    });
     const { container } = render(<App />);
     await screen.findByText('Snow is in the forecast today!');
     expect(container.querySelector('.snowfall')).toBeInTheDocument();
+    const drifts = () => [...container.querySelectorAll<HTMLElement>('.snow-drift')];
+    await waitFor(() => expect(drifts()).toHaveLength(6));
+    expect(new Set(drifts().map(drift => drift.style.getPropertyValue('--drift-delay'))).size).toBeGreaterThan(1);
+    const initialTops = drifts().map(drift => parseFloat(drift.style.top));
+    expect(initialTops[0]).toBeLessThan(25);
+    expect(initialTops.at(-1)).toBeGreaterThan(960);
+    scroll = 200;
+    fireEvent.scroll(document);
+    await waitFor(() => expect(drifts().map(drift => parseFloat(drift.style.top)))
+      .toEqual(initialTops.map(top => expect.closeTo(top - 200))));
+
     vi.useFakeTimers();
     fireEvent.click(screen.getByRole('button', { name: 'Snow on' }));
     expect(screen.getByRole('button', { name: 'Ploughing…' })).toBeDisabled();
     expect(container.querySelector('.plow-truck')).toBeInTheDocument();
-    act(() => vi.advanceTimersByTime(2299));
+    expect(drifts()).toHaveLength(6);
+    act(() => vi.advanceTimersByTime(4849));
     expect(screen.queryByRole('button', { name: 'Snow off' })).not.toBeInTheDocument();
     act(() => vi.advanceTimersByTime(1));
     expect(container.querySelector('.snowfall')).not.toBeInTheDocument();
+    expect(drifts()).toHaveLength(0);
     fireEvent.click(screen.getByRole('button', { name: 'Snow off' }));
     expect(container.querySelector('.snowfall')).toBeInTheDocument();
   });

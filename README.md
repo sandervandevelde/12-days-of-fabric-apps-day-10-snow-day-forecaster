@@ -6,8 +6,9 @@ supports arrow keys to rotate and Enter to pin its center.
 
 The one- and two-week calendars use the selected location's dates, show highs and
 lows in Celsius, and highlight days with forecast snowfall. Days without model
-data are not treated as snow-free. Snow falls and builds up on the page when
-today's forecast includes snow; switching it off runs a snowplough first.
+data are not treated as snow-free. When today's forecast includes snow, drifts
+build up at different rates across the page. Switching snow off sends the
+snowplough back and forth across the screen to clear the drifts.
 
 The authenticated app calls [Open-Meteo](https://open-meteo.com/) through Rayfin
 functions for place search and up to 16 days of worldwide model guidance.

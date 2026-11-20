@@ -317,28 +317,25 @@ body,
   .winter-footer a { @apply font-bold underline underline-offset-2; }
 }
 
-.snow-surface { position: relative; }
-.snow-surface::after {
-  content: '';
+.winter-page { --plow-duration: 4.8s; }
+.snow-cover, .plow-stage { position: fixed; inset: 0; overflow: hidden; pointer-events: none; z-index: 20; }
+.snow-drift {
   position: absolute;
-  z-index: 1;
-  inset: -.35rem .7rem auto;
-  height: 1rem;
-  border-radius: 58% 64% 40% 42% / 78% 77% 40% 44%;
-  background: linear-gradient(var(--color-snowfall) 65%, var(--color-snow-edge));
-  box-shadow: 0 .22rem .35rem color-mix(in srgb, var(--color-shadow), transparent 73%);
-  transform: scaleY(0);
-  transform-origin: center .45rem;
-  transition: transform 650ms .8s ease-in;
-  pointer-events: none;
+  border-radius: 48% 56% 23% 32% / 94% 85% 22% 26%;
+  background:
+    radial-gradient(ellipse at 68% 28%, var(--color-snowfall) 25%, transparent 62%),
+    radial-gradient(ellipse at 30% 66%, var(--color-snowfall) 24%, transparent 64%),
+    linear-gradient(var(--color-snowfall) 25%, var(--color-snow-edge));
+  box-shadow: 0 .13rem .28rem color-mix(in srgb, var(--color-shadow), transparent 72%);
+  transform-origin: center bottom;
+  rotate: var(--drift-tilt);
+  animation: build-drift var(--drift-duration) var(--drift-delay) ease-out both;
 }
-.globe-panel.snow-surface::after { left: 2rem; right: 2rem; }
-.search-control.snow-surface::after { height: .55rem; }
-[data-snow='falling'] .snow-surface::after { transform: scaleY(1); transition: transform 40s 1s linear; }
-[data-snow='falling'] .outlook::after { transition-duration: 55s; }
-[data-snow='falling'] .search-control::after { transition-duration: 29s; }
-[data-snow='none'] .snow-surface::after { transition-delay: 0s; }
-.snowfall, .plow-stage { position: fixed; inset: 0; overflow: hidden; pointer-events: none; z-index: 20; }
+@keyframes build-drift {
+  0% { transform: scale(.32, 0); opacity: 0; }
+  16% { opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
 .snowfall i {
   position: absolute;
   top: -1rem;
@@ -350,21 +347,45 @@ body,
   box-shadow: 0 0 .25rem var(--color-sea-light);
   animation: snowfall var(--flake-speed) var(--flake-delay) linear infinite;
 }
-[data-snow='plowing'] .snowfall { animation: clear-snow 2.25s linear both; }
+[data-snow='plowing'] .snow-drift { animation-play-state: paused; }
+[data-snow='plowing'] .snow-cover {
+  /* Each mask keeps the snow ahead of the blade in one of the three lanes. */
+  mask-image: linear-gradient(black, black), linear-gradient(black, black), linear-gradient(black, black);
+  mask-repeat: no-repeat;
+  mask-position: right top, left center, right bottom;
+  animation: clear-snow var(--plow-duration) linear both;
+}
 @keyframes snowfall {
   from { transform: translate3d(0, -1rem, 0); opacity: .91; }
   to { transform: translate3d(var(--flake-drift), calc(100dvh + 2rem), 0); opacity: .4; }
 }
-@keyframes clear-snow { from { clip-path: inset(0); } to { clip-path: inset(0 0 0 100%); } }
+@keyframes clear-snow {
+  0% { mask-size: 100% 33.34%, 100% 33.34%, 100% 33.34%; }
+  28%, 36% { mask-size: 0% 33.34%, 100% 33.34%, 100% 33.34%; }
+  64%, 72% { mask-size: 0% 33.34%, 0% 33.34%, 100% 33.34%; }
+  100% { mask-size: 0% 33.34%, 0% 33.34%, 0% 33.34%; }
+}
 .plow-stage { z-index: 21; }
-.plow-truck { position: absolute; bottom: 1rem; left: 0; width: clamp(7rem, 17vw, 13rem); animation: plow-pass 2.25s cubic-bezier(.27,.12,.8,.86) both; }
+.plow-route { position: absolute; width: clamp(7rem, 15vw, 11rem); animation: plow-pass var(--plow-duration) linear both; }
+.plow-truck { display: block; width: 100%; }
 .plow-body { fill: var(--color-plow); }
 .plow-wheel { fill: var(--color-plow-wheel); }
 .plow-glass { fill: var(--color-snow-edge); }
 .plow-light { fill: var(--color-gold); }
 .plow-spray { fill: var(--color-snowfall); }
 .plow-shadow { fill: var(--color-shadow); opacity: .2; }
-@keyframes plow-pass { from { transform: translateX(-105%); } to { transform: translateX(100vw); } }
+@keyframes plow-pass {
+  0% { top: 16.67%; left: 0%; transform: translate(-100%, -50%); }
+  28% { top: 16.67%; left: 100%; transform: translate(-100%, -50%); }
+  31% { top: 33.33%; left: 100%; transform: translate(0, -50%); }
+  33% { top: 36.67%; left: 100%; transform: translate(0, -50%) scaleX(-1); }
+  36% { top: 50%; left: 100%; transform: translate(0, -50%) scaleX(-1); }
+  64% { top: 50%; left: 0%; transform: translate(0, -50%) scaleX(-1); }
+  67% { top: 66.67%; left: 0%; transform: translate(-100%, -50%) scaleX(-1); }
+  69% { top: 70%; left: 0%; transform: translate(-100%, -50%); }
+  72% { top: 83.33%; left: 0%; transform: translate(-100%, -50%); }
+  100% { top: 83.33%; left: 100%; transform: translate(-100%, -50%); }
+}
 
 @media (max-width: 52rem) {
   .winter-hero { grid-template-columns: 1fr 1fr; gap: var(--spacing-600); }
@@ -394,7 +415,9 @@ body,
 }
 @media (prefers-reduced-motion: reduce) {
   .snowfall { display: none; }
-  .snow-surface::after { transition: none !important; }
-  .plow-truck { left: auto; right: 1rem; animation: plow-fade 420ms ease both; }
+  .snow-drift { animation: none; }
+  [data-snow='plowing'] .snow-cover { mask-image: none; animation: drift-fade 420ms ease both; }
+  .plow-route { top: auto; bottom: 1rem; left: auto; right: 1rem; animation: plow-fade 420ms ease both; }
+  @keyframes drift-fade { to { opacity: 0; } }
   @keyframes plow-fade { 0%, 100% { opacity: 0; } 35%, 65% { opacity: 1; } }
 }

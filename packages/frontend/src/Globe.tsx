@@ -32,7 +32,7 @@ export function Globe({ place, onPick }: { place: Place; onPick: (point: Point) 
   const marker = geoDistance(center, point) < Math.PI / 2 ? projection(point) : null;
 
   return (
-    <figure className="globe-panel snow-surface m-0">
+    <figure className="globe-panel m-0" data-snow-ledge>
       <div className="globe-heading"><span className="live-dot" /> THE WINTER ATLAS</div>
       <svg viewBox="0 0 550 350" className="atlas" tabIndex={0} role="group"
         aria-label="Interactive world globe: drag or use arrow keys to rotate, click or press Enter to pin a location."

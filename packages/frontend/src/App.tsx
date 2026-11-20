@@ -68,8 +68,8 @@ function ForecastCalendar({ forecast, mode, offset, setOffset }: {
     <div className="calendar-navigation">
       <h3 aria-live="polite">{title}</h3>
       <div className="flex items-center gap-200">
-        <button className="icon-button" aria-label={`Previous ${periodLabel}`} disabled={visibleOffset === 0} onClick={() => setOffset(visibleOffset - 1)}><ChevronLeft className="icon-size-200" /></button>
-        <button className="icon-button" aria-label={`Next ${periodLabel}`} disabled={!canGoForward} onClick={() => setOffset(visibleOffset + 1)}><ChevronRight className="icon-size-200" /></button>
+        <button className="icon-button" data-snow-ledge aria-label={`Previous ${periodLabel}`} disabled={visibleOffset === 0} onClick={() => setOffset(visibleOffset - 1)}><ChevronLeft className="icon-size-200" /></button>
+        <button className="icon-button" data-snow-ledge aria-label={`Next ${periodLabel}`} disabled={!canGoForward} onClick={() => setOffset(visibleOffset + 1)}><ChevronRight className="icon-size-200" /></button>
       </div>
     </div>
     <div className="calendar-grid" role="group" aria-label={mode === 'week' ? 'Weekly forecast' : 'Two-week forecast'}>
@@ -79,7 +79,7 @@ function ForecastCalendar({ forecast, mode, offset, setOffset }: {
         const snow = isSnowDay(day);
         const weather = hasWeather(day) ? condition(day) : null;
         const amount = snow && day?.snow != null && day.snow > 0 ? snowDepth(day.snow) : '';
-        return <article key={date} className={`day-cell ${snow ? 'day-snow' : ''} ${date === today ? 'day-today' : ''} ${!weather ? 'day-unavailable' : ''}`}
+        return <article key={date} data-snow-ledge className={`day-cell ${snow ? 'day-snow' : ''} ${date === today ? 'day-today' : ''} ${!weather ? 'day-unavailable' : ''}`}
           aria-label={`${formatDate(date, { weekday: 'long', month: 'long', day: 'numeric' })}${date === today ? ', today' : ''}`}>
           <div className="day-number"><time dateTime={date}>{Number(date.slice(-2))}</time>{date === today && <span className="today-tag">Today</span>}</div>
           {weather && day ? <>
@@ -179,15 +179,15 @@ function App() {
     <header className="winter-header">
       <div className="winter-wrap header-inner">
         <div className="brand-lockup">
-          <div className="brand-mark"><Snowflake className="icon-size-400" aria-hidden="true" /></div>
+          <div className="brand-mark" data-snow-ledge><Snowflake className="icon-size-400" aria-hidden="true" /></div>
           <div><p>Snowpost</p><span>THE WINTER WEATHER EDITION</span></div>
         </div>
         <div className="header-controls">
-          <button type="button" className="snow-toggle" aria-pressed={snow.mode !== 'off'} disabled={snow.mode === 'plowing'} onClick={snow.toggle}>
+          <button type="button" className="snow-toggle" data-snow-ledge aria-pressed={snow.mode !== 'off'} disabled={snow.mode === 'plowing'} onClick={snow.toggle}>
             {snow.mode === 'plowing' ? <Truck className="icon-size-200" /> : <Snowflake className="icon-size-200" />}
             {snow.mode === 'plowing' ? 'Ploughing…' : snow.mode === 'off' ? 'Snow off' : 'Snow on'}
           </button>
-          <button type="button" className="icon-button theme-toggle" aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'} onClick={toggleTheme}>
+          <button type="button" className="icon-button theme-toggle" data-snow-ledge aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'} onClick={toggleTheme}>
             {isDark ? <Sun className="icon-size-300" /> : <Moon className="icon-size-300" />}
           </button>
         </div>
@@ -198,12 +198,12 @@ function App() {
       <section className="winter-hero" aria-labelledby="main-title">
         <div className="hero-copy">
           <p className="winter-eyebrow"><span /> THE FESTIVE FORECAST</p>
-          <h1 id="main-title">Will it <em>snow?</em></h1>
+          <h1 id="main-title">Will it <em data-snow-ledge>snow?</em></h1>
           <p className="hero-description">Find a little winter magic anywhere in the world. Pick a place to see when the next flakes might fall.</p>
           <div className="location-search">
             <form onSubmit={findPlace} className="search-form">
               <label htmlFor="place-query">Find a location</label>
-              <div className="search-control snow-surface">
+              <div className="search-control" data-snow-ledge>
                 <Search className="icon-size-300 search-icon" aria-hidden="true" />
                 <input id="place-query" value={query} placeholder="Try Rovaniemi or Montréal" maxLength={100} autoComplete="off"
                   aria-describedby="search-hint" onChange={event => {
@@ -214,7 +214,7 @@ function App() {
                 <button type="submit" className="find-button" disabled={search.status === 'loading'}>{search.status === 'loading' ? 'Finding…' : 'Find place'}</button>
               </div>
             </form>
-            {search.status !== 'idle' && <div className="search-results">
+            {search.status !== 'idle' && <div className="search-results" data-snow-ledge>
               <div className="search-results-heading"><span>{search.status === 'loading' ? 'Searching' : 'Place search'}</span>
                 <button type="button" className="icon-button" aria-label="Close search results" onClick={() => { searchVersion.current += 1; setSearch(idle); }}><X className="icon-size-200" /></button>
               </div>
@@ -236,13 +236,13 @@ function App() {
         }} />
       </section>
 
-      <section className="outlook snow-surface" aria-labelledby="outlook-title">
+      <section className="outlook" data-snow-ledge aria-labelledby="outlook-title">
         <div className="outlook-intro">
           <div className="outlook-location">
-            <div className="section-icon"><MapPin className="icon-size-400" /></div>
+            <div className="section-icon" data-snow-ledge><MapPin className="icon-size-400" /></div>
             <div><p className="winter-eyebrow">YOUR WINTER OUTLOOK</p><h2 id="outlook-title">{place.name}</h2><p className="place-region">{place.region || coordinates(place.latitude, place.longitude)}</p></div>
           </div>
-          {forecast && <div className={`today-status ${snowToday ? 'today-status-snow' : ''}`} role="status">
+          {forecast && <div className={`today-status ${snowToday ? 'today-status-snow' : ''}`} data-snow-ledge role="status">
             <Snowflake className="icon-size-200" aria-hidden="true" /> {snowStatus}
           </div>}
         </div>
@@ -251,7 +251,7 @@ function App() {
             <div><h3><CalendarDays className="icon-size-300" /> Snow calendar</h3>
               <p>{forecast && forecast.days.some(hasWeather) ? `${snowCount} forecast snow ${snowCount === 1 ? 'day' : 'days'}${nextSnow ? ` · Next: ${nextSnow.date === today?.date ? 'Today' : formatDate(nextSnow.date, { month: 'short', day: 'numeric' })}` : ''}` : 'Worldwide outlook · Up to 16 days'}</p>
             </div>
-            <div className="mode-toggle" role="group" aria-label="Calendar view">
+            <div className="mode-toggle" data-snow-ledge role="group" aria-label="Calendar view">
               {calendarViews.map(view => <button key={view.mode} type="button" aria-pressed={mode === view.mode} onClick={() => { setMode(view.mode); setOffset(0); }}>{view.label}</button>)}
             </div>
           </div>
@@ -261,7 +261,7 @@ function App() {
         </div>
       </section>
 
-      <footer className="winter-footer">
+      <footer className="winter-footer" data-snow-ledge>
         <span><Snowflake className="icon-size-200" /> Weather and place search by <a href="https://open-meteo.com/" target="_blank" rel="noreferrer">Open‑Meteo</a></span>
         <span>Up to 16 days of model guidance. Forecasts can change, especially farther out.</span>
       </footer>

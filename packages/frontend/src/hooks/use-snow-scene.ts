@@ -1,16 +1,17 @@
 import { useEffect, useState } from 'react';
 
 export function useSnowScene(snowToday: boolean) {
-  const [mode, setMode] = useState<'on' | 'plowing' | 'off'>('on');
+  const [mode, setMode] = useState<'on' | 'plowing' | 'plowing-snow' | 'off'>('on');
+  const plowing = mode === 'plowing' || mode === 'plowing-snow';
   useEffect(() => {
-    if (mode !== 'plowing') return;
+    if (!plowing) return;
     const timer = window.setTimeout(
       () => setMode('off'),
-      window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 450 : 2300,
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 450 : 4850,
     );
     return () => window.clearTimeout(timer);
-  }, [mode]);
+  }, [plowing]);
 
-  const toggle = () => setMode(mode === 'off' ? 'on' : 'plowing');
-  return { mode, falling: snowToday && mode !== 'off', toggle };
+  const toggle = () => setMode(mode === 'off' ? 'on' : snowToday ? 'plowing-snow' : 'plowing');
+  return { mode: plowing ? 'plowing' as const : mode, falling: mode === 'plowing-snow' || (mode === 'on' && snowToday), toggle };
 }
