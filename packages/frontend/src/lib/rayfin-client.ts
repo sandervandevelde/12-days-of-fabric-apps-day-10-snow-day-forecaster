@@ -5,9 +5,11 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-import { browserSession } from '@microsoft/rayfin-auth';
 import { RayfinClient, resolveRayfinConfig } from '@microsoft/rayfin-client';
+import { browserSession } from '@microsoft/rayfin-auth';
 import { dataService } from '@microsoft/rayfin-data';
+import { functionsService } from '@microsoft/rayfin-functions';
+import type { AppFunctionsSchema } from '@rayfin-app/functions/types';
 import type { UniversalAppSchema } from '@rayfin-app/shared';
 
 export type AppClient = ReturnType<typeof createClient>;
@@ -23,10 +25,11 @@ export class MissingRayfinConfigError extends Error {
 /**
  * Resolves and shares the app's configured Rayfin client.
  *
- * Typed by `UniversalAppSchema`, so `client.data.<Entity>` is checked against
- * the entities declared by `@rayfin-app/data`. Without the generic the
- * data API is `any`, and a typo in an entity or field name only surfaces at
- * runtime — which the app's `tsc --noCheck` build would never catch.
+ * Typed by `UniversalAppSchema` and `AppFunctionsSchema`, so `client.data.<Entity>`
+ * and `client.functions.<Function>` are both checked against what the app
+ * declares. Without the generics those APIs are `any`, and a typo in an entity,
+ * field or function name only surfaces at runtime — which the app's
+ * `tsc --noCheck` build would never catch.
  *
  * Async because deployment-specific values are resolved at runtime rather than
  * compiled in: a Deployment Pipeline promotes one built artifact from Dev to
@@ -78,6 +81,9 @@ function createClient(config: {
   return RayfinClient.create({
     ...config,
     auth: browserSession({ storage: true }),
-    services: { data: dataService<UniversalAppSchema>() },
+    services: {
+      data: dataService<UniversalAppSchema>(),
+      functions: functionsService<AppFunctionsSchema>(),
+    },
   });
 }

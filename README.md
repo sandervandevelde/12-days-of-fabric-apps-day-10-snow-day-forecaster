@@ -1,4 +1,21 @@
-# Universal App Template
+# Snowpost
+
+Snowpost is a Christmas-themed snowfall forecast. Search by place name or
+`latitude, longitude`, or drag and tap the globe to drop a pin. The globe also
+supports arrow keys to rotate and Enter to pin its center.
+
+The week and month calendars use the selected location's dates, show highs and
+lows in Celsius, and highlight days with forecast snowfall. Days without model
+data are not treated as snow-free. Snow falls and builds up on the page when
+today's forecast includes snow; switching it off runs a snowplough first.
+
+The authenticated app calls [Open-Meteo](https://open-meteo.com/) through Rayfin
+functions for place search and up to 16 days of worldwide model guidance.
+Longer-range forecasts are less reliable, and some locations or dates can lack
+data. The keyless API is for [non-commercial use](https://open-meteo.com/en/terms).
+The globe uses public-domain Natural Earth geometry via World Atlas.
+
+## Fabric App workspace
 
 > **⚠️ This repository is under active development.** Features and instructions may change.
 

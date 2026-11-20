@@ -2,6 +2,12 @@ id: 12-days-of-fabric-apps-day-10-snow-day-forecaster
 name: 12 Days of Fabric Apps Day 10 Snow Day Forecaster
 version: 1.0.0
 services:
+  functions:
+    enabled: true
+    path: "packages/functions"
+    buildCommand: "npm run build"
+    auth:
+      type: "application"
   auth:
     enabled: true
     fabric:

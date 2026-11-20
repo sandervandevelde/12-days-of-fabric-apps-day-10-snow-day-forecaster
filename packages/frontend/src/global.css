@@ -8,42 +8,59 @@
    `useCssTheme()` and project them into a JS theme object (Vega's SVG output
    cannot resolve `var()` references). */
 @theme static {
-  --color-brand: #0f6cbd; /* bar/area fills, button-like brand surfaces */
-  --color-brand-foreground: #0f6cbd; /* line/point marks, branded text & emphasis */
-  --color-hover: #f5f5f5; /* row/cell hover surface in DataGrid + visuals */
+  --color-brand: #97404b;
+  --color-brand-foreground: #97404b;
+  --color-hover: #f3ebde;
 }
 
 @theme {
   /* Color tokens — light theme
      Usage: bg-*, text-*, border-* (e.g. bg-primary text-primary-foreground)
      Each token has a -foreground pair for text on that surface. */
-  --color-background: #ffffff; /* page background */
-  --color-foreground: #242424; /* default text */
+  --color-background: #faf6ed;
+  --color-foreground: #18352d;
 
-  --color-card: #ffffff; /* card surfaces */
-  --color-card-foreground: #242424;
+  --color-card: #fffdf8;
+  --color-card-foreground: #18352d;
 
-  --color-popover: #ffffff; /* popover/dropdown surfaces */
-  --color-popover-foreground: #242424;
+  --color-popover: #fffdf8;
+  --color-popover-foreground: #18352d;
 
-  --color-primary: #0f6cbd; /* primary actions & buttons */
-  --color-primary-foreground: #ffffff;
+  --color-primary: #9c3542;
+  --color-primary-foreground: #fff9f0;
 
-  --color-secondary: #fafafa; /* secondary actions */
-  --color-secondary-foreground: #242424;
+  --color-secondary: #f2ecdf;
+  --color-secondary-foreground: #18352d;
 
-  --color-muted: #f0f0f0; /* subtle backgrounds */
-  --color-muted-foreground: #616161; /* subdued text */
+  --color-muted: #f1ede4;
+  --color-muted-foreground: #53645b;
 
-  --color-accent: #f5f5f5; /* accent highlights */
-  --color-accent-foreground: #242424;
+  --color-accent: #e6f0ed;
+  --color-accent-foreground: #255d61;
 
   --color-destructive: #c50f1f; /* errors & destructive actions */
   --color-destructive-foreground: #ffffff;
 
-  --color-border: #e0e0e0; /* default border */
-  --color-input: #e0e0e0; /* input field borders */
-  --color-ring: #0f6cbd; /* focus rings */
+  --color-border: #e4dccf;
+  --color-input: #d7cebe;
+  --color-ring: #9c3542;
+  --color-festive: #9c3542;
+  --color-gold: #e9c585;
+  --color-atlas: #102b28;
+  --color-atlas-bright: #254d45;
+  --color-atlas-ink: #e9e9d8;
+  --color-atlas-dim: #aec8bb;
+  --color-atlas-grid: #bfd5c8;
+  --color-atlas-coast: #c3d6c3;
+  --color-sea-light: #517e74;
+  --color-sea-dark: #183a37;
+  --color-land-light: #c0cfb4;
+  --color-land-dark: #648e79;
+  --color-snowfall: #f9ffff;
+  --color-snow-edge: #d2e7ee;
+  --color-plow: #b44148;
+  --color-plow-wheel: #263532;
+  --color-shadow: #132d25;
 
   --radius-none: 0;
   --radius-sm: 2px;
@@ -56,7 +73,7 @@
   --radius-5xl: 32px;
   --radius-6xl: 40px;
   --radius-full: 9999px;
-  --radius: 6px;
+  --radius: 12px;
 
   /* Spacing — 4px grid; use only these tokens, no interpolation. *-nudge = base − 2px.
      Usage: p-*, m-*, gap-* (e.g. p-400 gap-300) */
@@ -108,20 +125,11 @@
 
   /* Font Families
      Usage: font-* (e.g. font-heading, font-base) */
-  --font-heading:
-    'Segoe UI', 'Segoe UI Web (West European)',
-    /* headings, titles, display text */ -apple-system, BlinkMacSystemFont,
-    Roboto, 'Helvetica Neue', sans-serif;
-  --font-base:
-    'Segoe UI', 'Segoe UI Web (West European)',
-    /* body text, labels, UI controls */ -apple-system, BlinkMacSystemFont,
-    Roboto, 'Helvetica Neue', sans-serif;
+  --font-heading: 'Fraunces', Georgia, serif;
+  --font-base: 'DM Sans', 'Segoe UI', sans-serif;
   --font-monospace:
     Consolas, 'Courier New', Courier, monospace; /* code, pre-formatted text */
-  --font-numeric:
-    Bahnschrift, 'Segoe UI',
-    /* KPI values, numeric displays */ 'Segoe UI Web (West European)',
-    -apple-system, BlinkMacSystemFont, Roboto, 'Helvetica Neue', sans-serif;
+  --font-numeric: 'DM Sans', 'Segoe UI', sans-serif;
 
   /* Icon Sizes — 100-based scale
      Usage: icon-size-* custom utility (e.g. icon-size-200) */
@@ -142,37 +150,38 @@
 @layer base {
   .dark {
     /* Color tokens — dark theme */
-    --color-background: #292929;
-    --color-foreground: #ffffff;
+    --color-background: #11251f;
+    --color-foreground: #f2ebde;
 
-    --color-card: #292929;
-    --color-card-foreground: #ffffff;
+    --color-card: #19332b;
+    --color-card-foreground: #f2ebde;
 
-    --color-popover: #292929;
-    --color-popover-foreground: #ffffff;
+    --color-popover: #203d33;
+    --color-popover-foreground: #f2ebde;
 
-    --color-primary: #115ea3;
-    --color-primary-foreground: #ffffff;
+    --color-primary: #efabb2;
+    --color-primary-foreground: #3e1420;
 
-    --color-secondary: #1f1f1f;
-    --color-secondary-foreground: #ffffff;
+    --color-secondary: #254139;
+    --color-secondary-foreground: #f2ebde;
 
-    --color-muted: #141414;
-    --color-muted-foreground: #adadad;
+    --color-muted: #20392f;
+    --color-muted-foreground: #becac1;
 
-    --color-accent: #3d3d3d;
-    --color-accent-foreground: #ffffff;
+    --color-accent: #254949;
+    --color-accent-foreground: #b9e8e9;
 
     --color-destructive: #c50f1f;
     --color-destructive-foreground: #ffffff;
 
-    --color-border: #525252;
-    --color-input: #525252;
-    --color-ring: #479ef5;
+    --color-border: #3b574c;
+    --color-input: #537367;
+    --color-ring: #efabb2;
+    --color-festive: #efabb2;
 
-    --color-brand: #115ea3;
-    --color-brand-foreground: #479ef5;
-    --color-hover: #3d3d3d;
+    --color-brand: #efabb2;
+    --color-brand-foreground: #efabb2;
+    --color-hover: #254139;
   }
 }
 
@@ -182,12 +191,211 @@
   }
 
   body {
-    @apply bg-background text-foreground antialiased;
+    @apply bg-background text-foreground font-base antialiased;
   }
+
+  select, input, textarea, button { font: inherit; }
+  button:not(:disabled) { cursor: pointer; }
 }
 
 html,
 body,
 #root {
   height: 100%;
+}
+
+@layer components {
+  .winter-page { min-height: 100%; }
+  .winter-wrap { width: min(100% - 2 * var(--spacing-800), 74rem); margin-inline: auto; }
+  .winter-header { @apply border-b border-border; }
+  .header-inner { @apply flex items-center justify-between gap-300 py-400; }
+  .brand-lockup, .header-controls { @apply flex items-center gap-300; }
+  .brand-mark { @apply grid place-items-center rounded-3xl bg-primary text-primary-foreground; width: 2.8rem; height: 2.8rem; }
+  .brand-lockup p { @apply font-heading text-600 font-bold; line-height: 1.05; }
+  .brand-lockup span { @apply block text-100 font-bold text-muted-foreground mt-100; letter-spacing: .13em; }
+  .snow-toggle, .icon-button { @apply inline-flex items-center justify-center rounded-full border border-border bg-card text-foreground; }
+  .snow-toggle { @apply gap-200 px-300 text-300 font-semibold; min-height: 2.5rem; }
+  .icon-button { min-width: 2.25rem; min-height: 2.25rem; }
+  .theme-toggle { min-width: 2.5rem; min-height: 2.5rem; }
+  .snow-toggle:hover:not(:disabled), .icon-button:hover:not(:disabled), .retry-button:hover { @apply bg-secondary; }
+  .snow-toggle svg { @apply text-festive; }
+  .icon-button:disabled { opacity: .43; }
+  .winter-page :is(button, a, svg[tabindex]):focus-visible { @apply outline-2 outline-offset-2 outline-ring; }
+  .winter-main { @apply py-800; }
+  .winter-hero { @apply grid items-center; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: clamp(2rem, 5vw, 5rem); margin-bottom: clamp(2rem, 4vw, 3.5rem); }
+  .winter-eyebrow { @apply flex items-center gap-200 text-200 font-bold text-festive; letter-spacing: .17em; }
+  .hero-copy .winter-eyebrow > span { width: 1.6rem; height: 1px; background: currentColor; }
+  .hero-copy h1 { @apply font-heading font-bold mt-400; font-size: clamp(3.75rem, 7.4vw, 7.25rem); letter-spacing: -.071em; line-height: .96; }
+  .hero-copy h1 em { @apply text-festive; font-weight: 600; white-space: nowrap; }
+  .hero-description { @apply mt-500 text-muted-foreground; max-width: 24rem; font-size: clamp(1rem, 1.6vw, 1.2rem); line-height: 1.55; }
+  .location-search { @apply relative mt-800; max-width: 29rem; }
+  .search-form label { @apply block mb-200 text-300 font-bold; }
+  .search-control { @apply flex items-center gap-200 rounded-3xl border border-input bg-card p-100; min-height: 3.35rem; }
+  .search-control:focus-within { @apply outline-2 outline-offset-2 outline-ring; }
+  .search-icon { @apply ml-300 shrink-0 text-muted-foreground; }
+  .search-control input { @apply min-w-0 grow px-100 text-400 outline-none; }
+  .search-control input::placeholder { @apply text-muted-foreground; }
+  .find-button { @apply shrink-0 rounded-2xl bg-primary px-400 text-300 text-primary-foreground; min-height: 2.65rem; font-weight: 700; }
+  .find-button:hover:not(:disabled) { filter: brightness(.9); }
+  .find-button:disabled { opacity: .7; }
+  .search-hint { @apply mt-300 flex items-center gap-200 text-300 text-muted-foreground; }
+  .search-hint svg { @apply shrink-0 text-festive; }
+  .search-results { @apply absolute z-10 mt-200 w-full rounded-3xl border border-border bg-popover text-popover-foreground p-200; box-shadow: 0 .75rem 1.8rem color-mix(in srgb, var(--color-shadow), transparent 83%); }
+  .search-results-heading { @apply flex items-center justify-between pl-200 text-200 font-bold text-muted-foreground; }
+  .search-results p { @apply m-200 text-300; }
+  .search-results li button { @apply flex w-full items-center gap-300 rounded-2xl p-200 text-left; }
+  .search-results li button:hover { @apply bg-secondary; }
+  .search-results li button > span { @apply grow; }
+  .search-results li strong, .search-results li small { @apply block; }
+  .search-results li small { @apply text-200 text-muted-foreground; }
+  .globe-panel { @apply relative isolate rounded-5xl bg-atlas text-atlas-ink; background: radial-gradient(ellipse at 48% 42%, var(--color-atlas-bright), var(--color-atlas) 76%); box-shadow: 0 1.25rem 3rem color-mix(in srgb, var(--color-shadow), transparent 82%); }
+  .globe-heading { @apply absolute top-400 left-500 flex items-center gap-200 text-100 font-bold; letter-spacing: .16em; pointer-events: none; }
+  .live-dot { @apply inline-block rounded-full bg-gold; width: .43rem; height: .43rem; box-shadow: 0 0 .8rem var(--color-gold); }
+  .atlas { @apply block w-full rounded-5xl; min-height: 14rem; touch-action: none; cursor: grab; }
+  .atlas:active { cursor: grabbing; }
+  .atlas-star { fill: var(--color-atlas-dim); opacity: .47; }
+  .atlas-spark { stroke: var(--color-gold); stroke-width: 1; opacity: .7; }
+  .atlas-orbit { fill: none; stroke: var(--color-atlas-dim); stroke-dasharray: 1 5; opacity: .5; }
+  .atlas-orbit-inner { stroke-dasharray: none; opacity: .2; }
+  .atlas-sphere { stroke: var(--color-atlas-dim); stroke-width: 1; }
+  .ocean-light { stop-color: var(--color-sea-light); }
+  .ocean-dark { stop-color: var(--color-sea-dark); }
+  .land-light { stop-color: var(--color-land-light); }
+  .land-dark { stop-color: var(--color-land-dark); }
+  .atlas-land { stroke: var(--color-atlas-coast); stroke-width: .4; }
+  .atlas-grid { fill: none; stroke: var(--color-atlas-grid); stroke-width: .6; opacity: .26; }
+  .atlas-north { fill: var(--color-atlas-dim); font-size: var(--text-100); font-weight: 700; }
+  .atlas-halo { fill: none; stroke: var(--color-gold); opacity: .75; }
+  .atlas-pin { fill: var(--color-gold); stroke: var(--color-atlas); stroke-width: 1.2; }
+  .atlas-cross { fill: none; stroke: var(--color-atlas-ink); stroke-width: 1; opacity: .7; }
+  .globe-footer { @apply flex items-center justify-between gap-200 px-500 pb-400 text-200 text-atlas-dim; }
+  .globe-footer > span { @apply flex items-center gap-200; font-variant-numeric: tabular-nums; }
+  .globe-center { @apply rounded-full border px-300 py-100 text-atlas-ink; border-color: color-mix(in srgb, var(--color-atlas-dim), transparent 65%); }
+  .globe-center:hover { @apply bg-atlas-bright; }
+  .globe-panel :is(button, svg):focus-visible { @apply outline-gold; }
+  .outlook { @apply rounded-5xl border border-border bg-card; }
+  .outlook-intro { @apply flex flex-wrap items-center justify-between gap-400 px-600 py-500; }
+  .outlook-location { @apply flex items-center gap-400; min-width: 0; }
+  .section-icon { @apply grid shrink-0 place-items-center rounded-3xl bg-secondary text-festive; width: 3.3rem; height: 3.3rem; }
+  .outlook h2 { @apply mt-100 font-heading text-hero-800 font-semibold; line-height: 1.1; overflow-wrap: anywhere; }
+  .place-region { @apply mt-100 text-300 text-muted-foreground; }
+  .today-status { @apply flex items-center gap-200 rounded-full bg-secondary px-300 py-200 text-200 font-bold text-secondary-foreground; }
+  .today-status-snow { @apply bg-accent text-accent-foreground; }
+  .calendar-panel { @apply border-t border-border px-600 pt-500 pb-400; }
+  .calendar-toolbar, .calendar-navigation { @apply flex flex-wrap items-center justify-between gap-300; }
+  .calendar-toolbar h3 { @apply flex items-center gap-200 font-heading text-500 font-semibold; }
+  .calendar-toolbar h3 svg { @apply text-festive; }
+  .calendar-toolbar p { @apply mt-100 text-300 text-muted-foreground; }
+  .mode-toggle { @apply inline-flex rounded-full border border-border bg-secondary p-100; }
+  .mode-toggle button { @apply rounded-full px-400 py-100 text-300 text-muted-foreground; min-height: 2rem; font-weight: 700; }
+  .mode-toggle button[aria-pressed='true'] { @apply bg-primary text-primary-foreground; }
+  .calendar-navigation { @apply mt-500 mb-200; }
+  .calendar-navigation h3 { @apply font-heading text-500 font-semibold; }
+  .calendar-grid { @apply grid grid-cols-7 gap-200; }
+  .weekday { @apply py-100 text-center text-200 font-bold text-muted-foreground; letter-spacing: .07em; text-transform: uppercase; }
+  .day-cell { @apply relative flex min-w-0 flex-col items-center justify-center gap-100 rounded-2xl border border-border bg-card px-100 py-200; min-height: 6.8rem; }
+  .day-empty { visibility: hidden; }
+  .day-unavailable { @apply bg-secondary text-muted-foreground; border-style: dashed; }
+  .day-snow { @apply bg-accent text-accent-foreground; }
+  .day-today { @apply border-ring; box-shadow: inset 0 0 0 1px var(--color-ring); }
+  .day-number { @apply flex flex-wrap items-center justify-center gap-100 text-300 font-bold; }
+  .today-tag { @apply rounded-full bg-primary px-200 text-100 text-primary-foreground; }
+  .day-icon { @apply icon-size-400; }
+  .day-temperature { @apply flex items-center gap-100 font-numeric text-300; font-variant-numeric: tabular-nums; }
+  .day-temperature span, .day-dash { @apply text-muted-foreground; }
+  .day-amount { @apply text-200 font-bold; }
+  .calendar-legend { @apply mt-300 flex flex-wrap items-center gap-x-500 gap-y-200 text-200 text-muted-foreground; }
+  .calendar-legend > span, .winter-footer > span:first-child { @apply inline-flex items-center gap-200; }
+  .calendar-legend i { @apply inline-block rounded-sm border; width: .75rem; height: .75rem; }
+  .legend-snow { @apply text-accent-foreground; }
+  .legend-today { @apply border-ring; }
+  .legend-missing { @apply border-input bg-secondary; border-style: dashed; }
+  .calendar-units { @apply ml-auto; }
+  .calendar-message { @apply my-500 px-300 py-600 text-center text-muted-foreground; }
+  .retry-button { @apply mt-300 rounded-full border px-400 py-200 text-foreground; }
+  .winter-footer { @apply flex flex-wrap items-center justify-between gap-300 pt-500 text-200 text-muted-foreground; }
+  .winter-footer svg, .winter-footer a { @apply text-festive; }
+  .winter-footer a { @apply font-bold underline underline-offset-2; }
+}
+
+.snow-surface { position: relative; }
+.snow-surface::after {
+  content: '';
+  position: absolute;
+  z-index: 1;
+  inset: -.35rem .7rem auto;
+  height: 1rem;
+  border-radius: 58% 64% 40% 42% / 78% 77% 40% 44%;
+  background: linear-gradient(var(--color-snowfall) 65%, var(--color-snow-edge));
+  box-shadow: 0 .22rem .35rem color-mix(in srgb, var(--color-shadow), transparent 73%);
+  transform: scaleY(0);
+  transform-origin: center .45rem;
+  transition: transform 650ms .8s ease-in;
+  pointer-events: none;
+}
+.globe-panel.snow-surface::after { left: 2rem; right: 2rem; }
+.search-control.snow-surface::after { height: .55rem; }
+[data-snow='falling'] .snow-surface::after { transform: scaleY(1); transition: transform 40s 1s linear; }
+[data-snow='falling'] .outlook::after { transition-duration: 55s; }
+[data-snow='falling'] .search-control::after { transition-duration: 29s; }
+[data-snow='none'] .snow-surface::after { transition-delay: 0s; }
+.snowfall, .plow-stage { position: fixed; inset: 0; overflow: hidden; pointer-events: none; z-index: 20; }
+.snowfall i {
+  position: absolute;
+  top: -1rem;
+  left: var(--flake-x);
+  width: var(--flake-size);
+  height: var(--flake-size);
+  border-radius: 50%;
+  background: var(--color-snowfall);
+  box-shadow: 0 0 .25rem var(--color-sea-light);
+  animation: snowfall var(--flake-speed) var(--flake-delay) linear infinite;
+}
+[data-snow='plowing'] .snowfall { animation: clear-snow 2.25s linear both; }
+@keyframes snowfall {
+  from { transform: translate3d(0, -1rem, 0); opacity: .91; }
+  to { transform: translate3d(var(--flake-drift), calc(100dvh + 2rem), 0); opacity: .4; }
+}
+@keyframes clear-snow { from { clip-path: inset(0); } to { clip-path: inset(0 0 0 100%); } }
+.plow-stage { z-index: 21; }
+.plow-truck { position: absolute; bottom: 1rem; left: 0; width: clamp(7rem, 17vw, 13rem); animation: plow-pass 2.25s cubic-bezier(.27,.12,.8,.86) both; }
+.plow-body { fill: var(--color-plow); }
+.plow-wheel { fill: var(--color-plow-wheel); }
+.plow-glass { fill: var(--color-snow-edge); }
+.plow-light { fill: var(--color-gold); }
+.plow-spray { fill: var(--color-snowfall); }
+.plow-shadow { fill: var(--color-shadow); opacity: .2; }
+@keyframes plow-pass { from { transform: translateX(-105%); } to { transform: translateX(100vw); } }
+
+@media (max-width: 52rem) {
+  .winter-hero { grid-template-columns: 1fr 1fr; gap: var(--spacing-600); }
+  .hero-copy h1 em { display: block; }
+  .search-control input { font-size: var(--text-300); }
+  .find-button { padding-inline: var(--spacing-300); }
+}
+@media (max-width: 42rem) {
+  .winter-wrap { width: calc(100% - 2 * var(--spacing-400)); }
+  .winter-hero { grid-template-columns: 1fr; }
+  .hero-copy h1 em { display: inline; }
+  .location-search { max-width: none; }
+  .globe-heading { left: var(--spacing-400); }
+  .outlook-intro, .calendar-panel { padding-inline: var(--spacing-300); }
+  .calendar-grid { gap: var(--spacing-100); }
+  .day-cell { padding-inline: 0; min-height: 6.2rem; }
+  .day-icon { width: var(--icon-size-200); height: var(--icon-size-200); }
+  .day-temperature, .day-amount, .today-tag { font-size: var(--text-100); }
+  .today-tag { padding-inline: var(--spacing-100); }
+  .calendar-units { margin-left: 0; }
+}
+@media (max-width: 25rem) {
+  .brand-lockup span { letter-spacing: .035em; }
+  .brand-lockup, .header-controls { gap: var(--spacing-200); }
+  .search-icon { margin-left: var(--spacing-100); }
+  .search-control input { padding-inline: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .snowfall { display: none; }
+  .snow-surface::after { transition: none !important; }
+  .plow-truck { left: auto; right: 1rem; animation: plow-fade 420ms ease both; }
+  @keyframes plow-fade { 0%, 100% { opacity: 0; } 35%, 65% { opacity: 1; } }
 }
