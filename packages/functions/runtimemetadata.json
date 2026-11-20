@@ -1,5 +1,5 @@
 {
-  "schemaVersion": "2.0",
+  "schemaVersion": "3.0",
   "functions": [
     {
       "functionName": "searchPlaces",
@@ -13,7 +13,8 @@
           "isFabricParameter": false
         }
       ],
-      "contextAudiences": []
+      "contextAudiences": [],
+      "capabilities": []
     },
     {
       "functionName": "getForecast",
@@ -35,7 +36,8 @@
           "isFabricParameter": false
         }
       ],
-      "contextAudiences": []
+      "contextAudiences": [],
+      "capabilities": []
     }
   ]
 }

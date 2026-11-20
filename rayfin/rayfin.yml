@@ -4,10 +4,10 @@ version: 1.0.0
 services:
   functions:
     enabled: true
-    path: "packages/functions"
-    buildCommand: "npm run build"
+    path: packages/functions
+    buildCommand: npm run build
     auth:
-      type: "application"
+      type: application
   auth:
     enabled: true
     fabric:
@@ -17,6 +17,9 @@ services:
       enabled: false
     allowedRedirectUris:
       - http://localhost:5173
+      - http://localhost:5174
+      - http://127.0.0.1:5174
+      - https://still-poppy-e05e9ff841-northeurope.webapp.fabricapps.net
   data:
     enabled: false
     path: packages/data
@@ -30,3 +33,5 @@ services:
     assetAccess: protected
     embedded:
       only: false
+  storage:
+    enabled: false

@@ -1,0 +1,84 @@
+{
+  "runtime": "TypeScript",
+  "functionsMetadata": [
+    {
+      "name": "searchPlaces",
+      "scriptFile": "src\\function_app.ts",
+      "bindings": [
+        {
+          "name": "req",
+          "type": "httpTrigger",
+          "direction": "in",
+          "authLevel": "anonymous",
+          "methods": [
+            "post"
+          ],
+          "route": "searchPlaces"
+        },
+        {
+          "name": "$return",
+          "type": "http",
+          "direction": "out"
+        }
+      ],
+      "fabricProperties": {
+        "fabricMetadataSchemaVersion": "1.0",
+        "fabricFunctionReturnType": "Promise<SearchResult>",
+        "fabricFunctionParameters": [
+          {
+            "name": "query",
+            "dataType": "string",
+            "hasDefaultValue": false
+          }
+        ]
+      },
+      "functionCode": "udf.func('searchPlaces', async (query: string): Promise<SearchResult> => {\r\n  const name = typeof query === 'string' ? query.trim() : '';\r\n  if (name.length < 2 || name.length > 100) {\r\n    return { error: 'Enter a place name between 2 and 100 characters.', places: [] };\r\n  }\r\n  try {\r\n    const data = await request('https://geocoding-api.open-meteo.com/v1/search', {\r\n      name, count: '6', language: 'en', format: 'json',\r\n    });\r\n    const places = array(data.results).slice(0, 6).flatMap((value): Place[] => {\r\n      const { name, admin1, country, latitude, longitude } = object(value);\r\n      if (typeof name !== 'string' || typeof latitude !== 'number' || typeof longitude !== 'number') return [];\r\n      const region = [...new Set([admin1, country].filter((part): part is string => typeof part === 'string' && part !== name))].join(', ');\r\n      return [{ name: name.slice(0, 120), region: region.slice(0, 180), latitude, longitude }];\r\n    });\r\n    return { error: '', places };\r\n  } catch {\r\n    return { error: 'Place search is temporarily unavailable. Try again or pick a spot on the globe.', places: [] };\r\n  }\r\n}, [])",
+      "capabilities": []
+    },
+    {
+      "name": "getForecast",
+      "scriptFile": "src\\function_app.ts",
+      "bindings": [
+        {
+          "name": "req",
+          "type": "httpTrigger",
+          "direction": "in",
+          "authLevel": "anonymous",
+          "methods": [
+            "post"
+          ],
+          "route": "getForecast"
+        },
+        {
+          "name": "$return",
+          "type": "http",
+          "direction": "out"
+        }
+      ],
+      "fabricProperties": {
+        "fabricMetadataSchemaVersion": "1.0",
+        "fabricFunctionReturnType": "Promise<ForecastResult>",
+        "fabricFunctionParameters": [
+          {
+            "name": "latitude",
+            "dataType": "number",
+            "hasDefaultValue": false
+          },
+          {
+            "name": "longitude",
+            "dataType": "number",
+            "hasDefaultValue": false
+          }
+        ]
+      },
+      "functionCode": "udf.func('getForecast', async (latitude: number, longitude: number): Promise<ForecastResult> => {\r\n  if (!Number.isFinite(latitude) || !Number.isFinite(longitude) || Math.abs(latitude) > 90 || Math.abs(longitude) > 180) {\r\n    return { error: 'Choose a latitude from −90 to 90 and a longitude from −180 to 180.', timezone: '', days: [] };\r\n  }\r\n  try {\r\n    const data = await request('https://api.open-meteo.com/v1/forecast', {\r\n      latitude: latitude.toFixed(5), longitude: longitude.toFixed(5),\r\n      daily: 'snowfall_sum,temperature_2m_max,temperature_2m_min,weather_code',\r\n      timezone: 'auto', forecast_days: '16', cell_selection: 'nearest',\r\n    });\r\n    const daily = object(data.daily);\r\n    const snow = array(daily.snowfall_sum);\r\n    const high = array(daily.temperature_2m_max);\r\n    const low = array(daily.temperature_2m_min);\r\n    const code = array(daily.weather_code);\r\n    const days = array(daily.time).slice(0, 16).flatMap((date, index): Day[] =>\r\n      typeof date === 'string' && /^\\d{4}-\\d{2}-\\d{2}$/.test(date)\r\n        ? [{ date, snow: number(snow[index]), high: number(high[index]), low: number(low[index]), code: number(code[index]) }]\r\n        : []);\r\n    return { error: '', timezone: typeof data.timezone === 'string' ? data.timezone.slice(0, 64) : '', days };\r\n  } catch {\r\n    return { error: 'The forecast is temporarily unavailable. Please try again.', timezone: '', days: [] };\r\n  }\r\n}, [])",
+      "capabilities": []
+    }
+  ],
+  "packageVersions": {
+    "@microsoft/fabric-user-data-functions": "2.0.1"
+  },
+  "workerCapabilities": [
+    "secrets-endpoint"
+  ]
+}
