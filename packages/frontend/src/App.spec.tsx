@@ -1,7 +1,7 @@
 import { act, fireEvent, render, screen, within } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import App from './App';
-import type { Forecast, Place } from './weather';
+import { shiftDate, type Forecast, type Place } from './weather';
 
 const { forecast, search } = vi.hoisted(() => ({ forecast: vi.fn(), search: vi.fn() }));
 vi.mock('./lib/rayfin-client', () => ({
@@ -30,16 +30,29 @@ afterEach(() => {
 
 describe('Snowpost', () => {
   it('marks snow and distinguishes unavailable forecasts across calendar views', async () => {
+    forecast.mockResolvedValue({
+      ...snow,
+      days: [...snow.days, ...Array.from({ length: 13 }, (_, index) => ({
+        ...snow.days[1], date: shiftDate('2026-12-03', index),
+      }))],
+    });
     render(<App />);
     const today = await screen.findByRole('article', { name: /Monday, November 30, today/ });
     expect(within(today).getByLabelText('Snowfall 0.1 cm')).toBeVisible();
     const missing = screen.getByRole('article', { name: /Wednesday, December 2/ });
     expect(within(missing).getByLabelText('No forecast')).toBeVisible();
-    fireEvent.click(screen.getByRole('button', { name: 'Month' }));
-    expect(screen.getByRole('heading', { name: 'November 2026' })).toBeVisible();
-    fireEvent.click(screen.getByRole('button', { name: 'Next month' }));
-    expect(screen.getByRole('heading', { name: 'December 2026' })).toBeVisible();
-    expect(screen.getByRole('button', { name: 'Next month' })).toBeDisabled();
+    expect(within(screen.getByRole('group', { name: 'Weekly forecast' })).getAllByRole('article')).toHaveLength(7);
+    fireEvent.click(screen.getByRole('button', { name: 'Two weeks' }));
+    const calendar = within(screen.getByRole('group', { name: 'Two-week forecast' }));
+    expect(calendar.getAllByRole('article')).toHaveLength(14);
+    expect(calendar.getByRole('article', { name: 'Sunday, December 13' })).toBeVisible();
+    expect(screen.getByRole('heading', { name: 'Nov 30 – Dec 13, 2026' })).toBeVisible();
+    fireEvent.click(screen.getByRole('button', { name: 'Next two weeks' }));
+    expect(calendar.getByRole('article', { name: 'Monday, December 14' })).toBeVisible();
+    expect(calendar.queryByRole('article', { name: 'Sunday, December 13' })).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Next two weeks' })).toBeDisabled();
+    fireEvent.click(screen.getByRole('button', { name: 'Previous two weeks' }));
+    expect(screen.getByRole('heading', { name: 'Nov 30 – Dec 13, 2026' })).toBeVisible();
   });
 
   it('loads the chosen search result and supports keyboard pinning on the globe', async () => {

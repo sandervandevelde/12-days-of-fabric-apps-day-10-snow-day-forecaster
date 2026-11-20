@@ -4,7 +4,7 @@ Snowpost is a Christmas-themed snowfall forecast. Search by place name or
 `latitude, longitude`, or drag and tap the globe to drop a pin. The globe also
 supports arrow keys to rotate and Enter to pin its center.
 
-The week and month calendars use the selected location's dates, show highs and
+The one- and two-week calendars use the selected location's dates, show highs and
 lows in Celsius, and highlight days with forecast snowfall. Days without model
 data are not treated as snow-free. Snow falls and builds up on the page when
 today's forecast includes snow; switching it off runs a snowplough first.

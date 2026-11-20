@@ -3,7 +3,9 @@ import type { AppFunctionsSchema } from '@rayfin-app/functions/types';
 export type Place = AppFunctionsSchema['searchPlaces']['output']['places'][number];
 export type Forecast = AppFunctionsSchema['getForecast']['output'];
 export type Day = Forecast['days'][number];
-export type CalendarMode = 'week' | 'month';
+export type CalendarMode = 'week' | 'two-weeks';
+
+export const calendarDayCount: Record<CalendarMode, number> = { week: 7, 'two-weeks': 14 };
 
 export const initialPlace: Place = {
   name: 'Rovaniemi', region: 'Lapland, Finland', latitude: 66.49897, longitude: 25.68867,
@@ -17,23 +19,16 @@ export function shiftDate(date: string, days: number) {
   return iso(result);
 }
 
-export function periodStart(date: string, mode: CalendarMode) {
-  return mode === 'month' ? `${date.slice(0, 7)}-01` : shiftDate(date, -(utc(date).getUTCDay() + 6) % 7);
+export function periodStart(date: string) {
+  return shiftDate(date, -((utc(date).getUTCDay() + 6) % 7));
 }
 
 export function shiftPeriod(start: string, mode: CalendarMode, step: number) {
-  if (mode === 'week') return shiftDate(start, 7 * step);
-  const date = utc(start);
-  date.setUTCMonth(date.getUTCMonth() + step);
-  return iso(date);
+  return shiftDate(start, calendarDayCount[mode] * step);
 }
 
-export function calendarDates(start: string, mode: CalendarMode): (string | null)[] {
-  if (mode === 'week') return Array.from({ length: 7 }, (_, index) => shiftDate(start, index));
-  const lead = (utc(start).getUTCDay() + 6) % 7;
-  const count = utc(shiftDate(shiftPeriod(start, mode, 1), -1)).getUTCDate();
-  return Array.from({ length: Math.ceil((lead + count) / 7) * 7 }, (_, index) =>
-    index < lead || index >= lead + count ? null : shiftDate(start, index - lead));
+export function calendarDates(start: string, mode: CalendarMode) {
+  return Array.from({ length: calendarDayCount[mode] }, (_, index) => shiftDate(start, index));
 }
 
 export function formatDate(date: string, options: Intl.DateTimeFormatOptions) {

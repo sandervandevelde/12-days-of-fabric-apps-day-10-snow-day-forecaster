@@ -294,7 +294,6 @@ body,
   .calendar-grid { @apply grid grid-cols-7 gap-200; }
   .weekday { @apply py-100 text-center text-200 font-bold text-muted-foreground; letter-spacing: .07em; text-transform: uppercase; }
   .day-cell { @apply relative flex min-w-0 flex-col items-center justify-center gap-100 rounded-2xl border border-border bg-card px-100 py-200; min-height: 6.8rem; }
-  .day-empty { visibility: hidden; }
   .day-unavailable { @apply bg-secondary text-muted-foreground; border-style: dashed; }
   .day-snow { @apply bg-accent text-accent-foreground; }
   .day-today { @apply border-ring; box-shadow: inset 0 0 0 1px var(--color-ring); }

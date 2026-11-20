@@ -26,6 +26,10 @@ type Load = { status: 'loading' } | { status: 'error'; message: string } | { sta
 type SearchState = { status: 'idle' | 'loading' } | { status: 'error'; message: string } | { status: 'ready'; places: Place[] };
 const idle: SearchState = { status: 'idle' };
 const weekdays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+const calendarViews: { mode: CalendarMode; label: string }[] = [
+  { mode: 'week', label: 'Week' },
+  { mode: 'two-weeks', label: 'Two weeks' },
+];
 
 function condition(day: Day) {
   const code = day.code;
@@ -47,28 +51,30 @@ function ForecastCalendar({ forecast, mode, offset, setOffset }: {
   if (!today || !last || !forecast.days.some(hasWeather)) {
     return <p className="calendar-message" role="status">No forecast data is available for this spot. Try another location.</p>;
   }
-  const first = periodStart(today, mode);
+  const first = periodStart(today);
   let visibleOffset = offset;
   while (shiftPeriod(first, mode, visibleOffset) > last && visibleOffset > 0) visibleOffset -= 1;
   const start = shiftPeriod(first, mode, visibleOffset);
-  const canGoForward = shiftPeriod(start, mode, 1) <= last;
-  const end = shiftDate(start, 6);
-  const title = mode === 'month' ? formatDate(start, { month: 'long', year: 'numeric' })
-    : `${formatDate(start, { month: 'short', day: 'numeric' })} – ${formatDate(end, { ...(start.slice(0, 7) === end.slice(0, 7) ? {} : { month: 'short' }), day: 'numeric' })}, ${end.slice(0, 4)}`;
+  const next = shiftPeriod(start, mode, 1);
+  const canGoForward = next <= last;
+  const end = shiftDate(next, -1);
+  const startLabel = formatDate(start, { month: 'short', day: 'numeric', ...(start.slice(0, 4) === end.slice(0, 4) ? {} : { year: 'numeric' }) });
+  const endLabel = formatDate(end, { ...(start.slice(0, 7) === end.slice(0, 7) ? {} : { month: 'short' }), day: 'numeric' });
+  const title = `${startLabel} – ${endLabel}, ${end.slice(0, 4)}`;
+  const periodLabel = mode === 'week' ? 'week' : 'two weeks';
   const days = new Map(forecast.days.map(day => [day.date, day]));
 
   return <>
     <div className="calendar-navigation">
       <h3 aria-live="polite">{title}</h3>
       <div className="flex items-center gap-200">
-        <button className="icon-button" aria-label={`Previous ${mode}`} disabled={visibleOffset === 0} onClick={() => setOffset(visibleOffset - 1)}><ChevronLeft className="icon-size-200" /></button>
-        <button className="icon-button" aria-label={`Next ${mode}`} disabled={!canGoForward} onClick={() => setOffset(visibleOffset + 1)}><ChevronRight className="icon-size-200" /></button>
+        <button className="icon-button" aria-label={`Previous ${periodLabel}`} disabled={visibleOffset === 0} onClick={() => setOffset(visibleOffset - 1)}><ChevronLeft className="icon-size-200" /></button>
+        <button className="icon-button" aria-label={`Next ${periodLabel}`} disabled={!canGoForward} onClick={() => setOffset(visibleOffset + 1)}><ChevronRight className="icon-size-200" /></button>
       </div>
     </div>
-    <div className={`calendar-grid ${mode}`} aria-label={`${mode === 'week' ? 'Weekly' : 'Monthly'} forecast`}>
+    <div className="calendar-grid" role="group" aria-label={mode === 'week' ? 'Weekly forecast' : 'Two-week forecast'}>
       {weekdays.map(day => <div key={day} className="weekday">{day}</div>)}
-      {calendarDates(start, mode).map((date, index) => {
-        if (!date) return <div key={`empty-${index}`} className="day-cell day-empty" aria-hidden="true" />;
+      {calendarDates(start, mode).map(date => {
         const day = days.get(date);
         const snow = isSnowDay(day);
         const weather = hasWeather(day) ? condition(day) : null;
@@ -246,7 +252,7 @@ function App() {
               <p>{forecast && forecast.days.some(hasWeather) ? `${snowCount} forecast snow ${snowCount === 1 ? 'day' : 'days'}${nextSnow ? ` · Next: ${nextSnow.date === today?.date ? 'Today' : formatDate(nextSnow.date, { month: 'short', day: 'numeric' })}` : ''}` : 'Worldwide outlook · Up to 16 days'}</p>
             </div>
             <div className="mode-toggle" role="group" aria-label="Calendar view">
-              {(['week', 'month'] as const).map(value => <button key={value} type="button" aria-pressed={mode === value} onClick={() => { setMode(value); setOffset(0); }}>{value === 'week' ? 'Week' : 'Month'}</button>)}
+              {calendarViews.map(view => <button key={view.mode} type="button" aria-pressed={mode === view.mode} onClick={() => { setMode(view.mode); setOffset(0); }}>{view.label}</button>)}
             </div>
           </div>
           {load.status === 'loading' && <p className="calendar-message" role="status">Checking the latest forecast…</p>}
